@@ -1,0 +1,10 @@
+# Ignore compiled files.
+*.pyc
+*__pycache__
+
+# Ignore virtual environment.
+# Ignore compiled files.
+*.pyc
+*__pycache__
+
+# Ignore virtual environment.
