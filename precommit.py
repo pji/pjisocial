@@ -23,6 +23,7 @@ import rstcheck
 doctest_modules = [
     # Put imported modules with doctests here.
 ]
+ignore = []
 python_files = [
     '*'
     # Put the core module directory here.
