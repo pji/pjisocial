@@ -20,7 +20,7 @@ class TokenTestCase(ut.TestCase):
         self.user = '_pjisocial'
         self.value = '_pjisocial_secret'
         keyring.set_password(self.service, self.user, self.value)
-        
+
         # Ensure the non-existing secret doesn't exist.
         self.not_service = '_pjisocial_not_service'
         if keyring.get_password(self.not_service, self.user):
@@ -47,23 +47,23 @@ class TokenTestCase(ut.TestCase):
 
         # Determine if test passed.
         self.assertDictEqual(exp, act)
-    
+
     def test_get(self):
         """When called, the get() method should return the value of the
         secret as a string.
         """
         # Expected values.
         exp = self.value
-        
+
         # Create specific test data and state.
         token = cx.Token(self.service, self.user)
-        
+
         # Run test.
         act = token.get()
-        
+
         # Determine if test passed.
         self.assertEqual(exp, act)
-    
+
     def test_get_secret_does_not_exist(self):
         """If the secret doesn't exist in the OS's secret store, get()
         should raise a connect.SecretDoesNotExist exception.
@@ -71,13 +71,13 @@ class TokenTestCase(ut.TestCase):
         # Expected value.
         exp = cx.SecretDoesNotExist
         exp_msg = 'Expected secret not in OS secret store.'
-        
+
         # Set up specific test data and state.
         token = cx.Token(self.not_service, self.user)
-        
+
         # Determine if test passed when block completes.
         with self.assertRaisesRegex(exp, exp_msg):
-            
+
             # Run test.
             _ = token.get()
 
@@ -87,13 +87,13 @@ class TokenTestCase(ut.TestCase):
         """
         # Expected value.
         exp = f"Token('{self.service}', '{self.user}')"
-        
+
         # Set up specific test data and state.
         token = cx.Token(self.service, self.user)
-        
+
         # Run test.
         act = repr(token)
-        
+
         # Determine is test passed.
         self.assertEqual(exp, act)
 

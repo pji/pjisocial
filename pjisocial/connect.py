@@ -18,8 +18,8 @@ class Token:
     def __init__(self, service: str, user: str) -> None:
         self.service = service
         self.user = user
-    
-    def __repr__(self):
+
+    def __repr__(self) -> str:
         return f"Token('{self.service}', '{self.user}')"
 
     # Public methods.
