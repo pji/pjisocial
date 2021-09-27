@@ -11,5 +11,5 @@ filename = 'pjisocial/html/redirect.html'
 redirect = 'https://google.com'
 html = get_redirect_html(filename)
 redirect_html = html.format(redirect)
-webview.create_window('CNN Redirect', html=redirect_html)
+webview.create_window('Redirect', html=redirect_html)
 webview.start()
