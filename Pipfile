@@ -5,6 +5,10 @@ name = "pypi"
 
 [packages]
 keyring = "*"
+proxy-tools = "*"
+pyobjc-core = "*"
+pyobjc-framework-cocoa = "*"
+pywebview = "*"
 
 [dev-packages]
 pycodestyle = "*"

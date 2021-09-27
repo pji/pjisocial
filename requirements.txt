@@ -8,4 +8,9 @@
 -i https://pypi.org/simple
 importlib-metadata==4.8.1; python_version >= '3.6'
 keyring==23.2.1
+proxy-tools==0.1.0
+pyobjc-core==7.3
+pyobjc-framework-cocoa==7.3
+pyobjc-framework-webkit==7.3; python_version >= '3.6'
+pywebview==3.5
 zipp==3.5.0; python_version >= '3.6'
