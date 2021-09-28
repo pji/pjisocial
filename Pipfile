@@ -9,6 +9,8 @@ proxy-tools = "*"
 pyobjc-core = "*"
 pyobjc-framework-cocoa = "*"
 pywebview = "*"
+flask = "*"
+requests = "*"
 
 [dev-packages]
 pycodestyle = "*"
