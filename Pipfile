@@ -11,6 +11,7 @@ pyobjc-framework-cocoa = "*"
 pywebview = "*"
 flask = "*"
 requests = "*"
+click = "*"
 
 [dev-packages]
 pycodestyle = "*"

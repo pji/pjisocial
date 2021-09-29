@@ -4,9 +4,22 @@ httplistener
 
 A webserver for interacting with social media API calls.
 """
+import click                                    # type: ignore
+import logging
 import multiprocessing as mp
 
 from flask import Flask, make_response, request
+
+
+# Silence the logger since this is just to grab http redirects.
+def silence(text, file=None, nl=None, err=None, color=None, **styles):
+    """Dummy function to silence screen output from flask."""
+
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+click.echo = silence                            # type: ignore
+click.secho = silence                           # type: ignore
 
 
 # Multiprocessing configuration.
