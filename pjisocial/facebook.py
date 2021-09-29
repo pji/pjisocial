@@ -6,8 +6,7 @@ A module for automating Facebook.
 """
 import multiprocessing as mp
 from time import sleep
-
-import webview                              # type: ignore
+import webbrowser
 
 from pjisocial import httplistener as hl
 from pjisocial.connect import Token
@@ -23,7 +22,7 @@ TIMEOUT = 30
 
 
 # Login functions.
-def login(app_id: Token) -> None:
+def login(app_id: Token) -> str:
     """Log into Facebook."""
     # Facebook redirects the user to the redirect URI after login
     # is successful. This server receives that redirect.
@@ -32,6 +31,7 @@ def login(app_id: Token) -> None:
     hl.queue = queue
     kwargs = {
         'port': '5002',
+        'ssl_context': 'adhoc',
     }
     P_redirect = hl.ctx.Process(target=hl.app.run, kwargs=kwargs)
     P_redirect.start()
@@ -41,17 +41,16 @@ def login(app_id: Token) -> None:
     try:
         anticsrf = Token('pjisocial_fb_login_anticsrf', app_id.user, temp=True)
         anticsrf.set_random(32, urlsafe=True)
-        redirect_uri = f'http://127.0.0.1:{kwargs["port"]}/facebook_login'
+        redirect_uri = f'https://127.0.0.1:{kwargs["port"]}/facebook_login'
         path = '/dialog/oauth'
 
         # Create the window for the manual login and give it the
         # URL for the Facebook login.
-        title = 'Facebook Login'
         url = (f'{SCHEME}://{DOMAIN}{API}{path}'
                f'?client_id={app_id.get()}'
                f'&redirect_uri={redirect_uri}'
                f'&state={anticsrf.get()}')
-        resp = webview.create_window(title, url)
+        webbrowser.open(url)
 
         # Poll the local server for the data from the Facebook login
         # redirect.
@@ -68,3 +67,9 @@ def login(app_id: Token) -> None:
         P_redirect.terminate()
 
     return code
+
+
+if __name__ == '__main__':
+    app_id = Token(APP_ID_LOCATION, APP_ID_ACCOUNT)
+    code = login(app_id)
+    print(code)
