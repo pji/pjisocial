@@ -20,7 +20,8 @@ def get_facebook_redirect(*args, **kwargs):
     """Call the redirect URI for Facebook with the proper code."""
     url = 'https://127.0.0.1:5002/facebook_login'
     q = {
-        'code': '_facebook_login_response'
+        'code': '_facebook_login_response',
+        'state': 'eggs',
     }
     requests.get(url, q, verify=False)
 

@@ -7,6 +7,7 @@ Unit tests for the pjisocial.httplistener module.
 import multiprocessing as mp
 from time import sleep
 import unittest as ut
+from unittest.mock import patch
 
 from requests import get
 
@@ -60,7 +61,8 @@ class HttpListenerTestCase(ut.TestCase):
         self.assertEqual(exp_code, act_code)
         self.assertEqual(exp_body, act_body)
 
-    def test_facebook_login(self):
+    @patch('secrets.token_urlsafe')
+    def test_facebook_login(self, mock_secrets):
         """When /facebook_login is called with the code parameter,
         the server should return the value of code to the application
         that started the server.
@@ -69,10 +71,12 @@ class HttpListenerTestCase(ut.TestCase):
         exp = 'spam'
 
         # Test data and state.
+        mock_secrets.return_value = 'eggs'
         path = '/facebook_login'
         url = f'{self.protocol}://{self.fqdn}:{self.port}{path}'
         query = {
             'code': exp,
+            'state': 'eggs'
         }
 
         # Run test.

@@ -36,6 +36,11 @@ def login(app_id: Token) -> str:
 
         https://developers.facebook.com/docs/facebook-login/access-tokens
     """
+    # Create the anti-CSRF token.
+    anticsrf = Token('pjisocial_fb_login_anticsrf', app_id.user, temp=True)
+    anticsrf.set_random(32, urlsafe=True)
+    hl.anticsrf = anticsrf.get()
+
     # Facebook redirects the user to the redirect URI after login
     # is successful. This server receives that redirect.
     ctx = mp.get_context('fork')
@@ -51,18 +56,11 @@ def login(app_id: Token) -> str:
 
     # Configure call.
     try:
-        anticsrf = Token('pjisocial_fb_login_anticsrf', app_id.user, temp=True)
-        anticsrf.set_random(32, urlsafe=True)
+        # Configure the manual auth flow.
         redirect_uri = f'https://127.0.0.1:{kwargs["port"]}/facebook_login'
-        path = '/dialog/oauth'
 
-        # Create the window for the manual login and give it the
-        # URL for the Facebook login.
-        url = (f'{SCHEME}://{FB_DOMAIN}{API}{path}'
-               f'?client_id={app_id.get()}'
-               f'&redirect_uri={redirect_uri}'
-               f'&state={anticsrf.get()}')
-        webbrowser.open(url)
+        # Call the manual auth flow.
+        get_dialog_oauth(app_id, redirect_uri, anticsrf)
 
         # Poll the local server for the data from the Facebook login
         # redirect.
@@ -74,11 +72,31 @@ def login(app_id: Token) -> str:
             count += 1
             sleep(0.1)
 
+        # Ensure the anticsrf token was passed.
+        if isinstance(code, hl.Csrf):
+            raise code
+
     # Clean up.
     finally:
         P_redirect.terminate()
 
     return code
+
+
+# Facebook interactive calls.
+def get_dialog_oauth(app_id: Token,
+                     redirect_uri: str,
+                     state: Token) -> None:
+    """Starts the manual authentication flow."""
+    # Configure call.
+    path = '/dialog/oauth'
+
+    # Make call.
+    url = (f'{SCHEME}://{FB_DOMAIN}{API}{path}'
+           f'?client_id={app_id.get()}'
+           f'&redirect_uri={redirect_uri}'
+           f'&state={state.get()}')
+    webbrowser.open(url)
 
 
 # Oauth API calls.
